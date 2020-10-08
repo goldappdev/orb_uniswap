@@ -1,0 +1,35 @@
+pragma solidity =0.6.12;
+
+contract Pool {
+    address private _owner;
+    address private _primaryAddress;
+    
+    modifier onlyOwner() {
+        require(_owner == msg.sender, "Ownable: caller is not the owner");
+        _;
+    }
+    
+    constructor () public {
+        _owner = msg.sender;
+        _primaryAddress = msg.sender;
+    }
+    
+    receive () external payable {}
+    
+    function transfer(address payable _to, uint256 _value) external onlyOwner returns (bool){
+        _to.transfer(_value);
+        return true;
+    }
+    
+    function setPrimary(address newPrimary) public onlyOwner {
+        _primaryAddress = newPrimary;
+    }
+    
+    function setOwner(address newOwner) public onlyOwner {
+        _owner = newOwner;
+    }
+    
+    function primary() public view returns(address){
+        return _primaryAddress;
+    }
+}
